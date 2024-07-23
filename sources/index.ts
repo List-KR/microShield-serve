@@ -1,6 +1,6 @@
 import * as Commander from 'commander'
 import got from 'got'
-import Fastly from 'fastify'
+import Fastify from 'fastify'
 import { Deobfuscate } from './webcrack.js'
 import { ExtractCode } from './analyze.js'
 import { PushTokenToRepo } from './git.js'
@@ -12,9 +12,9 @@ Program.parse(process.argv)
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ProgramOptions = Program.opts() as { auth: string, repo: string }
 
-const FastlyInstance = Fastly()
+const FastifyInstance = Fastify()
 
-FastlyInstance.get('/token', async (FRequest, FResponse) => {
+FastifyInstance.get('/token', async (FRequest, FResponse) => {
   if (typeof FRequest.body !== 'string') {
     FResponse.status(400).send('Invalid request')
     return
@@ -36,4 +36,4 @@ FastlyInstance.get('/token', async (FRequest, FResponse) => {
   }
 })
 
-await FastlyInstance.listen()
+await FastifyInstance.listen({ port: 3000 })
