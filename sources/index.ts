@@ -9,9 +9,10 @@ import { PushTokenToRepo } from './git.js'
 const Program = new Commander.Command()
 Program.option('--auth <token>', 'GitHub token')
 Program.option('--repo <repo>', 'GitHub repository')
+Program.option('--host <host>', 'Host')
 Program.parse(process.argv)
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const ProgramOptions = Program.opts() as { auth: string, repo: string }
+const ProgramOptions = Program.opts() as { auth: string, repo: string, host: string }
 
 const FastifyInstance = Fastify()
 
@@ -38,4 +39,4 @@ FastifyInstance.post('/token', async (FRequest, FResponse) => {
   }
 })
 
-await FastifyInstance.listen({ port: 3000 })
+await FastifyInstance.listen({ port: 3000 , host: ProgramOptions.host })
