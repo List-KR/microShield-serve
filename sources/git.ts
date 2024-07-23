@@ -7,14 +7,6 @@ export async function PushTokenToRepo(Repo: string, Token: string, SHA: string, 
     repo: Repo.split('/')[1],
     path: SHA,
     message: `Update for ${SHA}`,
-    content: Token,
-    committer: {
-      name: 'bot',
-      email: ''
-    },
-    author: {
-      name: 'bot',
-      email: ''
-    }
+    content: btoa(Token)
   })
 }

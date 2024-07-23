@@ -21,7 +21,7 @@ FastifyInstance.post('/token', async (FRequest, FResponse) => {
     FResponse.status(400).send('Invalid request')
     return
   }
-  const SHA = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(FRequest.body)))).map(Block =>Block.toString(16).padStart(2, '0')).join('')
+  const SHA = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1', new TextEncoder().encode(FRequest.body)))).map(Block =>Block.toString(16).padStart(2, '0')).join('')
   try {
     await got.get(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@main/${SHA}`, {
       http2: true,
