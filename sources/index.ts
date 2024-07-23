@@ -15,7 +15,7 @@ const ProgramOptions = Program.opts() as { auth: string, repo: string }
 
 const FastifyInstance = Fastify()
 
-FastifyInstance.post('token', async (FRequest, FResponse) => {
+FastifyInstance.post('/token', async (FRequest, FResponse) => {
   if (typeof FRequest.body !== 'string') {
     FResponse.status(400).send('Invalid request')
     return
