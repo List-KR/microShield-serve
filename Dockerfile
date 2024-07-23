@@ -7,5 +7,6 @@ RUN bash nodesource_setup.sh
 RUN apt install -y nodejs
 COPY . /app
 RUN cd /app && npm install
-
-ENTRYPOINT ["npm", "run", "start"]
+RUN adduser runner
+USER runner
+ENTRYPOINT cd /app && npm run start
