@@ -1,6 +1,7 @@
 import * as Commander from 'commander'
 import got from 'got'
 import Fastify from 'fastify'
+import * as MemFs from 'memfs'
 import { Deobfuscate } from './webcrack.js'
 import { ExtractCode } from './analyze.js'
 import { PushTokenToRepo } from './git.js'
@@ -14,7 +15,7 @@ const ProgramOptions = Program.opts() as { auth: string, repo: string }
 
 const FastifyInstance = Fastify()
 
-FastifyInstance.get('/token', async (FRequest, FResponse) => {
+FastifyInstance.post('/token', async (FRequest, FResponse) => {
   if (typeof FRequest.body !== 'string') {
     FResponse.status(400).send('Invalid request')
     return
@@ -30,7 +31,8 @@ FastifyInstance.get('/token', async (FRequest, FResponse) => {
     }).text()
     FResponse.status(301).redirect(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@main/${SHA}`)
   } catch {
-    const Token = ExtractCode(await Deobfuscate(FRequest.body))
+    MemFs.fs.writeFileSync('/code.js', await Deobfuscate(FRequest.body))
+    const Token = ExtractCode(MemFs.fs.readFileSync('/code.js', 'utf8') as string)
     FResponse.status(200).send(Token)
     await PushTokenToRepo(ProgramOptions.repo, Token, SHA, ProgramOptions.auth)
   }
