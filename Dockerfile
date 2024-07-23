@@ -9,4 +9,5 @@ COPY . /app
 RUN cd /app && npm install
 RUN adduser runner
 USER runner
+EXPOSE 3000
 ENTRYPOINT cd /app && npm run start
