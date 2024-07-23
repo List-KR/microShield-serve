@@ -27,7 +27,11 @@ export function ExtractCode(Code: string) {
               TokenVars.push(...Child.getChildrenOfKind(TsMorph.SyntaxKind.Identifier))
             })
             TokenVars.forEach(TokenVar => {
-              Tokens.push(/(?<=")[A-Za-z0-9._]+(?=")/.exec(TokenVar.getDefinitions()[0].getDeclarationNode().getText())[0])
+              TokenVar.getDefinitions()[0].getDeclarationNode().forEachChild(Child => {
+                if (Child.getKind() === TsMorph.SyntaxKind.StringLiteral) {
+                  Tokens.push(Child.getText().slice(1, -1))
+                }
+              })
             })
           })
         }
