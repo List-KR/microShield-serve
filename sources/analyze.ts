@@ -20,7 +20,7 @@ export function ExtractCode(Code: string) {
 
       if (Initalizer && Initalizer.getKind() === TsMorph.SyntaxKind.StringLiteral) {
         const Value = Initalizer.getText().slice(1, -1)
-        if (/^eyJ[A-Za-z0-9._]+$/.test(Value)) {
+        if (/^eyJ[A-Za-z0-9._-]+$/.test(Value)) {
           VariableDeclaration.findReferencesAsNodes().forEach(Reference => {
             const TokenVars: TsMorph.KindToNodeMappings[TsMorph.ts.SyntaxKind.Identifier][] = []
             Reference.getParent().getChildren().forEach(Child => {
