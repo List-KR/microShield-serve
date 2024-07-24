@@ -10,3 +10,4 @@ RUN cd /app && npm install
 RUN adduser runner
 USER runner
 EXPOSE 3000
+ENTRYPOINT ["bash", "-c", "cd /app && npm start -- --host $HOST --repo $REPO --auth $AUTH"]
