@@ -2,15 +2,11 @@ import * as GitHub from '@octokit/rest'
 
 export async function PushTokenToRepo(Repo: string, Token: string, SHA: string, GitHubToken: string) {
   const GitHubInstance = new GitHub.Octokit({ auth: GitHubToken })
-  const Result = await GitHubInstance.actions.createWorkflowDispatch({
+  await GitHubInstance.repos.createOrUpdateFileContents({
     owner: Repo.split('/')[0],
     repo: Repo.split('/')[1],
-    workflow_id: '.github/workflows/commit.yml',
-    ref: 'main',
-    inputs: {
-      token: Token,
-      sha: SHA
-    }
+    path: SHA,
+    message: `Update for ${SHA}`,
+    content: btoa(Token)
   })
-  console.log(SHA, Result.status)
 }
