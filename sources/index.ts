@@ -17,25 +17,26 @@ const ProgramOptions = Program.opts() as { auth: string, repo: string, host: str
 const FastifyInstance = Fastify()
 
 FastifyInstance.post('/token', async (FRequest, FResponse) => {
+  const CurrentDate = new Date()
   if (typeof FRequest.body !== 'string') {
     FResponse.status(400).send('Invalid request')
     return
   }
   const SHA = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1', new TextEncoder().encode(FRequest.body)))).map(Block =>Block.toString(16).padStart(2, '0')).join('')
   try {
-    await got.get(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@main/${SHA}`, {
+    await got.get(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@main/${CurrentDate.getUTCFullYear()}/${CurrentDate.getUTCMonth()}/${CurrentDate.getUTCDate()}/${SHA}`, {
       http2: true,
       https: {
         minVersion: 'TLSv1.3',
         ciphers: 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256'
       }
     }).text()
-    FResponse.status(301).redirect(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@main/${SHA}`)
+    FResponse.status(301).redirect(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@main/${CurrentDate.getUTCFullYear()}/${CurrentDate.getUTCMonth()}/${CurrentDate.getUTCDate()}/${SHA}`)
   } catch {
     MemFs.fs.writeFileSync('/code.js', await Deobfuscate(FRequest.body))
     const Token = ExtractCode(MemFs.fs.readFileSync('/code.js', 'utf8') as string)
     FResponse.status(200).send(Token)
-    await PushTokenToRepo(ProgramOptions.repo, Token, SHA, ProgramOptions.auth)
+    await PushTokenToRepo(ProgramOptions.repo, Token, SHA, ProgramOptions.auth, CurrentDate)
   }
 })
 
