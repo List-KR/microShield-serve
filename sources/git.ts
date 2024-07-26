@@ -5,7 +5,7 @@ export async function PushTokenToRepo(Repo: string, Token: string, SHA: string, 
   await GitHubInstance.repos.createOrUpdateFileContents({
     owner: Repo.split('/')[0],
     repo: Repo.split('/')[1],
-    path: `${CurrentDate.getUTCFullYear()}/${CurrentDate.getUTCMonth()}/${CurrentDate.getUTCDate()}/${SHA}`,
+    path: `${CurrentDate.getUTCFullYear()}/${CurrentDate.getUTCMonth()}/${CurrentDate.getUTCDate()}/${SHA}.token`,
     message: `Update for ${SHA}`,
     content: btoa(Token)
   })
