@@ -34,7 +34,7 @@ FastifyInstance.post('/token', async (FRequest, FResponse) => {
     FResponse.status(301).redirect(`https://cdn.jsdelivr.net/gh/List-KR/microShield-token@latest/${CurrentDate.getUTCFullYear()}/${CurrentDate.getUTCMonth()}/${CurrentDate.getUTCDate()}/${SHA}.token`)
   } catch {
     MemFs.fs.writeFileSync('/code.js', await Deobfuscate(FRequest.body))
-    const Token = ExtractCode(MemFs.fs.readFileSync('/code.js', 'utf8') as string)
+    const Token = await ExtractCode(MemFs.fs.readFileSync('/code.js', 'utf8') as string)
     FResponse.status(200).send(Token)
     await PushTokenToRepo(ProgramOptions.repo, Token, SHA, ProgramOptions.auth, CurrentDate)
   }

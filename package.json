@@ -8,7 +8,7 @@
   "dependencies": {
     "@octokit/rest": "^21.0.1",
     "commander": "^12.1.0",
-    "es-toolkit": "^1.12.0",
+    "es-toolkit": "^1.13.1",
     "fastify": "^4.28.1",
     "got": "^14.4.1",
     "memfs": "^4.9.3",
